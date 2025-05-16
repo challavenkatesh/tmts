@@ -5,35 +5,49 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(""); // Clear any previous errors
+  try {
+    const response = await fetch("http://localhost:3000/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
 
-    try {
-      const response = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, password })
-      });
+    const data = await response.json();
 
-      const data = await response.json();
+    if (response.ok) {
+      const token = data.access_token;
+      console.log("JWT Token:", token);
 
-   if (response.ok) {
-  const { token, message } = data;
-  localStorage.setItem("token", token); // Optional: store in localStorage
-  console.log("JWT Token:", token); // ✅ log JWT in console
-  alert(message || "Login successful!");
-} else {
-  setError(data.message || "Invalid credentials");
-}
+      // Decode token
+      const decoded = jwtDecode(token);
+      console.log("Decoded Token:", decoded); // check roles here
 
-    } catch (err) {
-      setError("Something went wrong. Please try again.");
+      // Save token if needed (optional)
+      localStorage.setItem("token", token);
+
+      // Redirect based on role
+      if (decoded.role === "admin") {
+        router.push("/admin-dashboard");
+      } else if (decoded.role === "trainer") {
+        router.push("/trainer-dashboard");
+      } else if (decoded.role === "employee") {
+        router.push("/employee-dashboard");
+      } else {
+        alert("Unknown role");
+      }
+    } else {
+      alert(data.message || "Invalid credentials");
     }
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("Something went wrong");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
