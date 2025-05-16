@@ -1,3 +1,16 @@
+/**
+ * LoginPage component renders a responsive login form with a visually appealing layout.
+ * 
+ * Features:
+ * - Left side displays an animated image (visible on medium screens and above).
+ * - Right side contains the login form with username and password fields.
+ * - Includes "Remember me" checkbox and "Forgot Password?" link.
+ * - Uses Tailwind CSS for styling and responsive design.
+ * - On form submission, displays an alert with entered credentials (for demonstration).
+ * 
+ * @component
+ * @returns {JSX.Element} The rendered login page component.
+ */
 // src/app/page.jsx or src/pages/index.jsx (depending on your Next.js setup)
 "use client";
 import React, { useState } from "react";
@@ -90,5 +103,6 @@ const LoginPage = () => {
     </div>
   );
 };
+
 
 export default LoginPage;
