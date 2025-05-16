@@ -1,42 +1,53 @@
-/**
- * LoginPage component renders a responsive login form with a visually appealing layout.
- * 
- * Features:
- * - Left side displays an animated image (visible on medium screens and above).
- * - Right side contains the login form with username and password fields.
- * - Includes "Remember me" checkbox and "Forgot Password?" link.
- * - Uses Tailwind CSS for styling and responsive design.
- * - On form submission, displays an alert with entered credentials (for demonstration).
- * 
- * @component
- * @returns {JSX.Element} The rendered login page component.
- */
-// src/app/page.jsx or src/pages/index.jsx (depending on your Next.js setup)
 "use client";
 import React, { useState } from "react";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Logging in with\nUsername: ${username}\nPassword: ${password}`);
+    setError(""); // Clear any previous errors
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Assuming your backend sends back a token and message
+        const { token, message } = data;
+        localStorage.setItem("token", token); // Store JWT
+
+        alert(message || "Login successful!");
+        // You can redirect to dashboard or another page here
+        // Example: window.location.href = "/dashboard";
+      } else {
+        setError(data.message || "Invalid credentials");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
       <div className="flex bg-white rounded-xl shadow-xl max-w-4xl w-full overflow-hidden">
-        {/* Left Image Side */}
         <div className="w-1/2 hidden md:block">
           <img
             src="https://i.pinimg.com/originals/9f/c2/12/9fc2126eec2c0a3876e3f2097af9b983.gif"
             alt="Login Visual"
-            className="h-full w-full   object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
 
-        {/* Right Form Side */}
         <div className="w-full md:w-1/2 p-10">
           <h2 className="text-3xl font-bold text-gray-800 mb-6">
             Welcome Back!
@@ -44,12 +55,12 @@ const LoginPage = () => {
           <p className="mb-8 text-gray-600">
             Login to your account to continue
           </p>
+          {error && (
+            <div className="mb-4 text-red-600 font-semibold">{error}</div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label
-                htmlFor="username"
-                className="block mb-2 text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-700">
                 Username
               </label>
               <input
@@ -64,10 +75,7 @@ const LoginPage = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="block mb-2 text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-700">
                 Password
               </label>
               <input
@@ -103,6 +111,5 @@ const LoginPage = () => {
     </div>
   );
 };
-
 
 export default LoginPage;
