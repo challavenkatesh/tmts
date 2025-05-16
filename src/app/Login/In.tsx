@@ -21,17 +21,15 @@ const LoginPage = () => {
 
       const data = await response.json();
 
-      if (response.ok) {
-        // Assuming your backend sends back a token and message
-        const { token, message } = data;
-        localStorage.setItem("token", token); // Store JWT
+   if (response.ok) {
+  const { token, message } = data;
+  localStorage.setItem("token", token); // Optional: store in localStorage
+  console.log("JWT Token:", token); // ✅ log JWT in console
+  alert(message || "Login successful!");
+} else {
+  setError(data.message || "Invalid credentials");
+}
 
-        alert(message || "Login successful!");
-        // You can redirect to dashboard or another page here
-        // Example: window.location.href = "/dashboard";
-      } else {
-        setError(data.message || "Invalid credentials");
-      }
     } catch (err) {
       setError("Something went wrong. Please try again.");
     }
