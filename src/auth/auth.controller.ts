@@ -1,11 +1,13 @@
-import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { ApiKeyGuard } from './api-key.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @UseGuards(ApiKeyGuard)
   async register(@Body() userData: any) {
     return this.authService.register(userData);
   }

@@ -5,17 +5,19 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from '../users/users.module';
+import { ApiKeyGuard } from './api-key.guard';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: 'mySuperSecretKey123', // <-- same hardcoded secret here
+      secret: 'mySuperSecretKey123',
       signOptions: { expiresIn: '3600s' },
     }),
     UsersModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, ApiKeyGuard],
+  exports: [ApiKeyGuard],
 })
 export class AuthModule {}
