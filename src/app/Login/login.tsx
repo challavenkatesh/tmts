@@ -4,12 +4,12 @@ import React, { useState } from "react";
 const LoginCard = () => {
   const [form, setForm] = useState({ username: "", password: "" });
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { name: never; value: never; }; }) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     alert(`Logging in with\nUsername: ${form.username}\nPassword: ${form.password}`);
   };

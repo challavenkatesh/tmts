@@ -1,53 +1,50 @@
 "use client";
 import React, { useState } from "react";
+import jwtDecode from 'jwt-decode';
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-const handleSubmit = async (e) => {
-  e.preventDefault();
 
-  try {
-    const response = await fetch("http://localhost:3000/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const data = await response.json();
+    try {
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (response.ok) {
-      const token = data.access_token;
-      console.log("JWT Token:", token);
+      const data = await response.json();
 
-      // Decode token
-      const decoded = jwtDecode(token);
-      console.log("Decoded Token:", decoded); // check roles here
+      if (response.ok) {
+        const token = data.access_token;
+        console.log("JWT Token:", token);
 
-      // Save token if needed (optional)
-      localStorage.setItem("token", token);
+        const decoded = jwt_decode(token);
+        console.log("Decoded Token:", decoded);
 
-      // Redirect based on role
-      if (decoded.role === "admin") {
-        router.push("/admin-dashboard");
-      } else if (decoded.role === "trainer") {
-        router.push("/trainer-dashboard");
-      } else if (decoded.role === "employee") {
-        router.push("/employee-dashboard");
+        localStorage.setItem("token", token);
+
+        if (decoded.role === "admin") {
+          alert("Logged in as Admin. Redirecting to admin page.");
+        } else if (decoded.role === "trainer") {
+          alert("Logged in as Trainer. Redirecting to trainer page.");
+        } else if (decoded.role === "employee") {
+          alert("Logged in as Employee. Redirecting to employee page.");
+        } else {
+          alert("Unknown role");
+        }
       } else {
-        alert("Unknown role");
+        alert(data.message || "Invalid credentials");
       }
-    } else {
-      alert(data.message || "Invalid credentials");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong");
     }
-  } catch (error) {
-    console.error("Login error:", error);
-    alert("Something went wrong");
-  }
-};
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
@@ -64,15 +61,14 @@ const handleSubmit = async (e) => {
           <h2 className="text-3xl font-bold text-gray-800 mb-6">
             Welcome Back!
           </h2>
-          <p className="mb-8 text-gray-600">
-            Login to your account to continue
-          </p>
-          {error && (
-            <div className="mb-4 text-red-600 font-semibold">{error}</div>
-          )}
+          <p className="mb-8 text-gray-600">Login to your account to continue</p>
+          {error && <div className="mb-4 text-red-600 font-semibold">{error}</div>}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-700">
+              <label
+                htmlFor="username"
+                className="block mb-2 text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <input
@@ -87,7 +83,10 @@ const handleSubmit = async (e) => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block mb-2 text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input

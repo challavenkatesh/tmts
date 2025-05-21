@@ -21,7 +21,7 @@ export default function LoginPage() {
       formData.email === "admin@example.com" &&
       formData.password === "admin123"
     ) {
-      router.push("/dashboard");
+      router.push("/AdminPage/admin"); // Redirect to admin page
     } else {
       setError("Invalid credentials");
     }
@@ -102,16 +102,10 @@ export default function LoginPage() {
             {/* Options */}
             <div className="flex items-center justify-between text-sm text-gray-600">
               <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="form-checkbox text-indigo-600"
-                />
+                <input type="checkbox" className="form-checkbox text-indigo-600" />
                 Remember Me
               </label>
-              <a
-                href="#"
-                className="text-indigo-600 hover:underline font-medium"
-              >
+              <a href="#" className="text-indigo-600 hover:underline font-medium">
                 Forgot Password?
               </a>
             </div>
@@ -127,10 +121,7 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-gray-600">
             Don’t have an account?{" "}
-            <a
-              href="#"
-              className="font-medium text-indigo-600 hover:underline"
-            >
+            <a href="#" className="font-medium text-indigo-600 hover:underline">
               Sign Up
             </a>
           </p>
@@ -179,8 +170,7 @@ export default function LoginPage() {
               Smart Training Tracker
             </h2>
             <p className="text-lg drop-shadow-md">
-              Track your progress, manage training, and enhance performance
-              seamlessly.
+              Track your progress, manage training, and enhance performance seamlessly.
             </p>
           </div>
         </motion.div>

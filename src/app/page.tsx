@@ -1,10 +1,9 @@
 import React from 'react';
-
-import IN from "./Login/In";
+import LoginPage from './loginpage/page';
 function Page() {
   return (
-    <div>
-      <IN />
+<div>
+  <     LoginPage />
     </div>
   );
 }
